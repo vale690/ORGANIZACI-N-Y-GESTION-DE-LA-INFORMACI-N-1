@@ -153,7 +153,7 @@ function renderList(){
     const head = document.createElement('div'); head.className='item-head';
     head.innerHTML = <div class="item-title">${esc(r.title)}</div><div class="muted">${esc(r.category)}</div>;
     const desc = document.createElement('div'); desc.className='item-meta';
-    desc.innerHTML = <div class="muted">${esc(r.description || '')}</div><div class="muted">Propietario: ${esc(r.owner||'') }<br><small>${new Date(r.createdAt).toLocaleString()}</small></div>;
+    desc.innerHTML = <div class="muted">${esc(r.description || '')}</div><div class="muted">Propietario: ${esc(r.owner||'')}<br><small>${new Date(r.createdAt).toLocaleString()}</small></div>;
     const tagsWrap = document.createElement('div'); tagsWrap.className='tags';
     (r.tags || []).forEach(t=>{ const s=document.createElement('span'); s.className='tag'; s.textContent = t; tagsWrap.appendChild(s); });
 
