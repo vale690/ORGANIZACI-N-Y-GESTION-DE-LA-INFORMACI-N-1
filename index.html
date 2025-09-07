@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Organización y Gestión de la Información — CEPRODENT</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <h1>Organización y Gestión de la Información</h1>
+      <p class="subtitle">CEPRODENT — Centro de Estudios Técnicos CanaleTe 2025</p>
+    </div>
+    <div id="user-area" class="user-area">No autenticado</div>
+  </header>
+
+  <main class="layout">
+    <!-- PANEL IZQUIERDO: Autenticación + formulario + import/export + reportes -->
+    <aside class="panel card">
+      <section class="auth">
+        <h2>Acceso</h2>
+        <input id="username" placeholder="Nombre de usuario" autocomplete="username" />
+        <input id="password" placeholder="Contraseña" type="password" autocomplete="current-password" />
+        <div class="row">
+          <button id="loginBtn" class="btn primary">Ingresar</button>
+          <button id="logoutBtn" class="btn ghost" style="display:none">Cerrar sesión</button>
+        </div>
+        <p class="hint">Contraseña <strong>admin123</strong> → rol <em>admin</em> (prototipo local).</p>
+      </section>
+
+      <hr />
+
+      <section>
+        <h2>Crear / Editar</h2>
+        <input id="docId" type="hidden" />
+        <input id="title" placeholder="Título *" />
+        <select id="category">
+          <option>Administrativo</option>
+          <option>Académico</option>
+          <option>Financiero</option>
+          <option>RRHH</option>
+          <option>Otro</option>
+        </select>
+        <input id="tags" placeholder="Etiquetas (ej: acta, contrato)" />
+        <textarea id="description" rows="4" placeholder="Descripción"></textarea>
+        <div class="row">
+          <button id="saveBtn" class="btn primary">Guardar registro</button>
+          <button id="clearBtn" class="btn ghost">Limpiar</button>
+        </div>
+      </section>
+
+      <hr />
+
+      <section>
+        <h2>Importar / Exportar</h2>
+        <input id="fileImport" type="file" accept="application/json" />
+        <div class="row" style="margin-top:8px">
+          <button id="exportJsonBtn" class="btn ghost">Exportar JSON</button>
+          <button id="exportCsvBtn" class="btn ghost">Exportar CSV</button>
+        </div>
+      </section>
+
+      <hr />
+
+      <section>
+        <h2>Reportes</h2>
+        <div id="reportSummary" class="report-summary">—</div>
+        <div class="row" style="margin-top:8px">
+          <button id="refreshReport" class="btn ghost">Actualizar</button>
+          <button id="guideBtn" class="btn ghost">Guía de uso</button>
+        </div>
+      </section>
+
+      <footer class="panel-footer">
+        <small>Proyecto: Organización y Gestión de la Información — CEPRODENT 2025</small>
+        <div class="credits">
+          <strong>Créditos:</strong>
+          <ul>
+            <li>Valeris Causil Berrio</li>
+            <li>Inis Paternina Lázaro</li>
+            <li>Sebastián Márquez Ortiz</li>
+          </ul>
+        </div>
+      </footer>
+    </aside>
+
+    <!-- CONTENIDO CENTRAL: Búsqueda, filtros, lista -->
+    <section class="content card">
+      <div class="controls-row">
+        <div class="search-wrap">
+          <input id="search" placeholder="Buscar por título, descripción o etiqueta" />
+        </div>
+
+        <div class="filters">
+          <select id="filterCategory">
+            <option value="">— Todas las categorías —</option>
+            <option>Administrativo</option>
+            <option>Académico</option>
+            <option>Financiero</option>
+            <option>RRHH</option>
+            <option>Otro</option>
+          </select>
+          <input id="filterTag" placeholder="Filtrar por etiqueta" />
+          <label class="lbl-date">Desde <input id="dateFrom" type="date" /></label>
+          <label class="lbl-date">Hasta <input id="dateTo" type="date" /></label>
+          <button id="applyFilters" class="btn ghost">Aplicar</button>
+          <button id="resetFilters" class="btn ghost">Restablecer</button>
+        </div>
+      </div>
+
+      <div id="list" class="list"></div>
+      <div id="emptyNotice" class="muted" style="display:none;margin-top:12px">No hay registros que coincidan.</div>
+
+      <div class="report-card card" style="margin-top:18px">
+        <h3>Gráfico: registros por categoría</h3>
+        <div id="chartContainer" class="chart-container">
+          <!-- SVG chart se inserta desde JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- PANEL DERECHO: Guía / ayuda (fijo) -->
+    <aside class="help-panel card">
+      <h2>Guía de uso</h2>
+      <div class="help-body">
+        <p><strong>Resumen:</strong> Esta aplicación organiza y protege información. Los datos se guardan en tu navegador (LocalStorage).</p>
+        <ol>
+          <li>Inicia sesión (usa <code>admin123</code> para admin).</li>
+          <li>Crear registro: complete título, categoría, etiquetas y descripción → Guardar.</li>
+          <li>Editar: botón <em>Editar</em> en cada registro.</li>
+          <li>Eliminar: solo rol <em>admin</em>.</li>
+          <li>Importar/Exportar: respaldos en JSON / CSV.</li>
+        </ol>
+        <p><strong>Formato JSON de importación:</strong></p>
+        <pre>[{"id":"r_xxx","title":"...","category":"...","tags":["..."],"description":"...","createdAt":"...","updatedAt":"...","owner":"..."}]</pre>
+      </div>
+    </aside>
+  </main>
+
+  <!-- Modal (guía grande) -->
+  <div id="modal" class="modal" aria-hidden="true">
+    <div class="modal-dialog">
+      <button class="modal-close" id="modalClose">&times;</button>
+      <h2>Guía completa — Organización y Gestión de la Información</h2>
+      <div class="modal-body">
+        <h3>Instrucciones rápidas</h3>
+        <ol>
+          <li>Inicia sesión: escribe tu nombre; si deseas rol admin escribe la contraseña <strong>admin123</strong>.</li>
+          <li>Crear registro: título obligatorio. Guarda y aparecerá en la lista central.</li>
+          <li>Buscar: usa la barra de búsqueda o los filtros por categoría/etiqueta/fecha.</li>
+          <li>Importar/Exportar: crea respaldos (JSON/CSV) o importa un archivo JSON que contenga un arreglo de registros.</li>
+        </ol>
+        <h3>Créditos</h3>
+        <ul>
+          <li>Valeris Causil Berrio</li>
+          <li>Inis Paternina Lázaro</li>
+          <li>Sebastián Márquez Ortiz</li>
+        </ul>
+      </div>
+      <div class="modal-actions">
+        <button id="modalCloseBtn" class="btn primary">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
